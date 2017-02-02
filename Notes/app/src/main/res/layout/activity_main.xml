@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -8,6 +8,69 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.codecool.notes.MainActivity">
+    tools:context="com.codecool.notes.MainActivity"
+    android:background="@color/colorAccent">
 
-</RelativeLayout>
+    <Button
+        android:text="@string/add_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/add_note"
+        android:onClick="onClickAddNew"/>
+
+    <LinearLayout>
+
+        <Button
+            android:id="@+id/sort_abc_asc"
+            android:text="@string/asc"
+            android:tag="ascA"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="onClickSort"/>
+
+        <Button
+            android:id="@+id/sort_abc_desc"
+            android:text="@string/desc"
+            android:tag="dscA"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="onClickSort"/>
+
+        <Button
+            android:id="@+id/sort_date_asc"
+            android:text="@string/asc"
+            android:tag="ascD"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="onClickSort"/>
+
+        <Button
+            android:text="@string/desc"
+            android:id="@+id/sort_date_desc"
+            android:tag="dscD"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="onClickSort"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"/>
+
+</TableLayout>
