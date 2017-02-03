@@ -1,10 +1,14 @@
 package com.codecool.notes;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,12 +36,31 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void onClickAddNew(View view) {
-        Log.d(TAG, "Add new clicked.");
-        String text = ((EditText) findViewById(R.id.editTextNote)).getText().toString();
-        ((EditText) findViewById(R.id.editTextNote)).setText("");
-        dbHelper.insertNote(new Note(text, new Date()));
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "'" + item + "' selected from options menu.");
+        switch (item.getItemId()) {
+            case R.id.menu_add:
+                final EditText noteEditText = new EditText(this);
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle(R.string.add_dialog_title)
+                        .setView(noteEditText)
+                        .setPositiveButton(R.string.save,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String note = String.valueOf(noteEditText.getText());
+                                        Log.d(TAG, "Note to save: " + note);
+                                        dbHelper.insertNote(new Note(note, new Date()));
+                                    }
+                                })
+                        .setNegativeButton(R.string.cancel, null).create();
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                dialog.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void onClickSort(View view) {

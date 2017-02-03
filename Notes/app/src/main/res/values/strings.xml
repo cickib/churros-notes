@@ -6,4 +6,7 @@
     <string name="date">Date</string>
     <string name="asc">&#9650;</string>
     <string name="desc">&#9660;</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_dialog_title">Add a new note</string>
 </resources>
