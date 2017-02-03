@@ -12,12 +12,12 @@ import com.codecool.notes.model.Note;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//TODO upgrade to prepared statements
 public class DbHelper extends SQLiteOpenHelper {
-    public static final String NOTES_TABLE_NAME = "notes";
-    public static final String NOTES_COLUMN_ID = "id";
-    public static final String NOTES_COLUMN_TEXT = "text";
-    public static final String NOTES_COLUMN_DATE = "date";
+    private static final String NOTES_TABLE_NAME = "notes";
+    private static final String NOTES_COLUMN_ID = "id";
+    private static final String NOTES_COLUMN_TEXT = "text";
+    private static final String NOTES_COLUMN_DATE = "date";
     private static final String DATABASE_NAME = "notesApp.db";
     private final String TAG = this.getClass().getSimpleName();
     private SQLiteDatabase db;
@@ -30,7 +30,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE " + NOTES_TABLE_NAME +
-                " (" + NOTES_COLUMN_ID + " INTEGER PRIMARYKEY, " +
+                " (" + NOTES_COLUMN_ID + " INTEGER PRIMARY KEY, " +
                 NOTES_COLUMN_TEXT + " text, " +
                 NOTES_COLUMN_DATE + " text);");
         Log.d(TAG, "Table '" + NOTES_TABLE_NAME + "' created in db '" + DATABASE_NAME + "'.");
@@ -62,6 +62,18 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public Note getNoteById(int id) {
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NOTES_TABLE_NAME + " WHERE " + NOTES_COLUMN_ID + "=" + id + ";", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            Log.d(TAG, "Note retrieved.");
+            return new Note(cursor.getString(cursor.getColumnIndex(NOTES_COLUMN_TEXT)), cursor.getString(cursor.getColumnIndex(NOTES_COLUMN_DATE)));
+        }
+        Log.d(TAG, "No note found with id " + id + ".");
+        return null;
+    }
+
     public int numberOfRecords() {
         db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, NOTES_TABLE_NAME);
@@ -90,6 +102,7 @@ public class DbHelper extends SQLiteOpenHelper {
             notes.add(new Note(res.getString(res.getColumnIndex(NOTES_COLUMN_TEXT)), res.getString(res.getColumnIndex(NOTES_COLUMN_DATE))));
             res.moveToNext();
         }
+        Log.d(TAG, notes.size() + " notes retrieved from db.");
         return notes;
     }
 
@@ -100,6 +113,12 @@ public class DbHelper extends SQLiteOpenHelper {
                 notes.add(note.getText());
             }
         }
+        Log.d(TAG, notes.size() + " notes stringified.");
         return notes;
+    }
+
+    public void dropDB(Context context) {
+        context.deleteDatabase(DATABASE_NAME);
+        Log.d(TAG, "Db '" + DATABASE_NAME + "' dropped.");
     }
 }
