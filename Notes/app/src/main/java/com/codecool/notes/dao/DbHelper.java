@@ -12,6 +12,7 @@ import com.codecool.notes.model.Note;
 
 import java.util.ArrayList;
 import java.util.List;
+
 //TODO upgrade to prepared statements
 public class DbHelper extends SQLiteOpenHelper {
     private static final String NOTES_TABLE_NAME = "notes";
@@ -106,10 +107,10 @@ public class DbHelper extends SQLiteOpenHelper {
         return notes;
     }
 
-    public List<String> stringifyNotes() {
+    public List<String> stringifyNotes(List<Note> noteList) {
         List<String> notes = new ArrayList<>();
-        if (numberOfRecords() > 0) {
-            for (Note note : getAll()) {
+        if (noteList.size() > 0) {
+            for (Note note : noteList) {
                 notes.add(note.getText());
             }
         }

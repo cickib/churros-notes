@@ -11,12 +11,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.codecool.notes.MainActivity">
 
-    <Spinner
-        android:id="@+id/sort_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/sort_options"
-        android:prompt="@string/sort_prompt" />
+    <LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sorted_by" />
+
+        <Spinner
+            android:id="@+id/sort_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:entries="@array/sort_options"
+            android:prompt="@string/sort_prompt" />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
