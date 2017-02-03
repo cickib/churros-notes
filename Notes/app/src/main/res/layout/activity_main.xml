@@ -11,53 +11,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.codecool.notes.MainActivity">
 
-    <LinearLayout>
-
-        <Button
-            android:id="@+id/sort_abc_asc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-            android:onClick="onClickSort"
-            android:tag="ascA"
-            android:text="@string/asc" />
-
-        <Button
-            android:id="@+id/sort_abc_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-            android:onClick="onClickSort"
-            android:tag="dscA"
-            android:text="@string/desc" />
-
-        <Button
-            android:id="@+id/sort_date_asc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-            android:onClick="onClickSort"
-            android:tag="ascD"
-            android:text="@string/asc" />
-
-        <Button
-            android:id="@+id/sort_date_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-            android:onClick="onClickSort"
-            android:tag="dscD"
-            android:text="@string/desc" />
-
-    </LinearLayout>
+    <Spinner
+        android:id="@+id/sort_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/sort_options"
+        android:prompt="@string/sort_prompt" />
 
     <View
         android:layout_width="match_parent"

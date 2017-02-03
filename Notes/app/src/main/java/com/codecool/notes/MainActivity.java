@@ -1,6 +1,5 @@
 package com.codecool.notes;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.codecool.notes.dao.DbHelper;
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private DbHelper dbHelper;
     private ListView listViewNotes;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DbHelper(this);
         listViewNotes = (ListView) findViewById(R.id.listview_notes);
         updateUi(dbHelper.stringifyNotes());
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.sort_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner = (Spinner) findViewById(R.id.sort_spinner);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new SpinnerOptionsListener());
     }
 
     @Override
@@ -53,14 +60,11 @@ public class MainActivity extends AppCompatActivity {
                         .setTitle(R.string.add_dialog_title)
                         .setView(noteEditText)
                         .setPositiveButton(R.string.save,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String note = String.valueOf(noteEditText.getText());
-                                        Log.d(TAG, "Note to save: " + note);
-                                        dbHelper.insertNote(new Note(note, new Date()));
-                                        updateUi(dbHelper.stringifyNotes());
-                                    }
+                                (dialog1, which) -> {
+                                    String note = String.valueOf(noteEditText.getText());
+                                    Log.d(TAG, "Note to save: " + note);
+                                    dbHelper.insertNote(new Note(note, new Date()));
+                                    updateUi(dbHelper.stringifyNotes());
                                 })
                         .setNegativeButton(R.string.cancel, null).create();
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);

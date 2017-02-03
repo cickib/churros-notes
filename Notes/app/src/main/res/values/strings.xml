@@ -9,4 +9,13 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="add_dialog_title">Add a new note</string>
+
+    <string name="sort_prompt">Sort</string>
+
+    <string-array name="sort_options">
+        <item>ABC &#9650;</item>
+        <item>ABC &#9660;</item>
+        <item>Date &#9650;</item>
+        <item>Date &#9660;</item>
+    </string-array>
 </resources>
