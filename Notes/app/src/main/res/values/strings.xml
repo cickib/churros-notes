@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Notes</string>
     <string name="add_note">Add note</string>
-    <string name="delete_note">Delete</string>
+    <string name="delete_note">X</string>
     <string name="abc">ABC</string>
     <string name="date">Date</string>
     <string name="asc">&#9650;</string>
