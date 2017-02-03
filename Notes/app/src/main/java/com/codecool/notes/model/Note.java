@@ -2,15 +2,17 @@ package com.codecool.notes.model;
 
 import android.util.Log;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Note {
     private final String TAG = this.getClass().getSimpleName();
     private String text;
     private Date date;
-    private SimpleDateFormat format = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+    private DateFormat format = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
 
     public Note(String text, Date date) {
         this.text = text;
