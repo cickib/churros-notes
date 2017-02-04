@@ -24,7 +24,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
-    private String order = "Date ▲";
+    private String order = "▲ Date";
     private NoteAdapter noteAdapter;
     private DbHelper dbHelper;
     private ListView listViewNotes;
@@ -91,6 +91,17 @@ public class MainActivity extends AppCompatActivity {
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 dialog.show();
                 return true;
+            case R.id.menu_clear_all:
+                AlertDialog dialogClear = new AlertDialog.Builder(this)
+                        .setTitle(R.string.clear_all)
+                        .setPositiveButton(R.string.yes,
+                                (dialog1, which) -> {
+                                    dbHelper.clearTable();
+                                    updateUi(noteSorter.sort());
+                                    Toast.makeText(MainActivity.this, "All clear. Yay!", Toast.LENGTH_SHORT).show();
+                                })
+                        .setNegativeButton(R.string.cancel, null).create();
+                dialogClear.show();
             default:
                 return super.onOptionsItemSelected(item);
         }

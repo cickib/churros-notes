@@ -24,8 +24,8 @@ public class NoteSorter {
     }
 
     private SortOption convertSort() {
-        String mode = orderString.toString().split("\\s+")[0];
-        String order = orderString.toString().split("\\s+")[1];
+        String mode = orderString.toString().split("\\s+")[1];
+        String order = orderString.toString().split("\\s+")[0];
         if (order.equals("▲") || order.equals("&#9650;")) {
             order = "ASC";
         } else {
@@ -35,18 +35,20 @@ public class NoteSorter {
     }
 
     public List<Note> sort() {
-        Log.d(TAG, "Sorted " + convertSort().getMode() + convertSort().getOrder() + ".");
         List<Note> sorted = dbHelper.getAll();
-        switch (convertSort().getMode()) {
-            case "ABC":
-                Collections.sort(sorted, (note1, note2) -> note1.getText().compareTo(note2.getText()));
-                break;
-            case "DATE":
-                Collections.sort(sorted, (note1, note2) -> note1.getDate().compareTo(note2.getDate()));
-                break;
-        }
-        if (convertSort().getOrder().equals("DESC")) {
-            Collections.reverse(sorted);
+        if (sorted.size() > 0) {
+            switch (convertSort().getMode()) {
+                case "ABC":
+                    Collections.sort(sorted, (note1, note2) -> note1.getText().compareTo(note2.getText()));
+                    break;
+                case "DATE":
+                    Collections.sort(sorted, (note1, note2) -> note1.getDate().compareTo(note2.getDate()));
+                    break;
+            }
+            if (convertSort().getOrder().equals("DESC")) {
+                Collections.reverse(sorted);
+            }
+            Log.d(TAG, "Sorted " + convertSort().getMode() + " " + convertSort().getOrder() + ".");
         }
         return sorted;
     }

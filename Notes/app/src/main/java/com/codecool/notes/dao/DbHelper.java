@@ -3,7 +3,6 @@ package com.codecool.notes.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -71,12 +70,6 @@ public class DbHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    public int numberOfRecords() {
-        db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, NOTES_TABLE_NAME);
-        return numRows;
-    }
-
     public boolean updateNote(int id, String text) {
         db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -103,8 +96,10 @@ public class DbHelper extends SQLiteOpenHelper {
         return notes;
     }
 
-    public void dropDB(Context context) {
-        context.deleteDatabase(DATABASE_NAME);
-        Log.d(TAG, "Db '" + DATABASE_NAME + "' dropped.");
+    public void clearTable() {
+        db = this.getReadableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + NOTES_TABLE_NAME + ";");
+        Log.d(TAG, "Table '" + NOTES_TABLE_NAME + "' dropped.");
+        onCreate(db);
     }
 }
