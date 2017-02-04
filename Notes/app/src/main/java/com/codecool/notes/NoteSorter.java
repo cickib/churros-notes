@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.codecool.notes.dao.DbHelper;
 import com.codecool.notes.model.Note;
+import com.codecool.notes.model.SortOption;
 
 import java.util.Collections;
 import java.util.List;
