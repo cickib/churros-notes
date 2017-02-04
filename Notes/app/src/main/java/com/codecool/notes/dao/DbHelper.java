@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -43,24 +44,19 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean insertNote(String text, String date) {
-        db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(NOTES_COLUMN_TEXT, text);
-        contentValues.put(NOTES_COLUMN_DATE, date);
-        db.insert(NOTES_TABLE_NAME, null, contentValues);
-        Log.d(TAG, "New record inserted to db (String args).");
-        return true;
-    }
-
     public boolean insertNote(Note note) {
         db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(NOTES_COLUMN_TEXT, note.getText());
         contentValues.put(NOTES_COLUMN_DATE, note.getDate().toString());
-        db.insert(NOTES_TABLE_NAME, null, contentValues);
-        Log.d(TAG, "New record inserted to db (Note arg).");
-        return true;
+        try {
+            db.insert(NOTES_TABLE_NAME, null, contentValues);
+            Log.d(TAG, "New record inserted to db (Note arg).");
+            return true;
+        } catch (SQLiteException e){
+            Log.e(TAG, "Failed to insert to "+NOTES_TABLE_NAME+".\n"+e.getMessage());
+            return false;
+        }
     }
 
     public Note getNoteById(int id) {
@@ -69,7 +65,7 @@ public class DbHelper extends SQLiteOpenHelper {
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             Log.d(TAG, "Note retrieved.");
-            return new Note(cursor.getString(cursor.getColumnIndex(NOTES_COLUMN_TEXT)), cursor.getString(cursor.getColumnIndex(NOTES_COLUMN_DATE)));
+            return new Note(cursor.getInt(cursor.getColumnIndex(NOTES_COLUMN_ID)), cursor.getString(cursor.getColumnIndex(NOTES_COLUMN_TEXT)), cursor.getString(cursor.getColumnIndex(NOTES_COLUMN_DATE)));
         }
         Log.d(TAG, "No note found with id " + id + ".");
         return null;
@@ -81,7 +77,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateNote(Integer id, String text) {
+    public boolean updateNote(int id, String text) {
         db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(NOTES_COLUMN_TEXT, text);
@@ -89,7 +85,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public Integer deleteNote(Integer id) {
+    public Integer deleteNote(int id) {
         db = this.getWritableDatabase();
         return db.delete(NOTES_TABLE_NAME, NOTES_COLUMN_ID + "= ? ;", new String[]{Integer.toString(id)});
     }
@@ -100,21 +96,10 @@ public class DbHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("SELECT * FROM " + NOTES_TABLE_NAME + ";", null);
         res.moveToFirst();
         while (!res.isAfterLast()) {
-            notes.add(new Note(res.getString(res.getColumnIndex(NOTES_COLUMN_TEXT)), res.getString(res.getColumnIndex(NOTES_COLUMN_DATE))));
+            notes.add(new Note(res.getInt(res.getColumnIndex(NOTES_COLUMN_ID)), res.getString(res.getColumnIndex(NOTES_COLUMN_TEXT)), res.getString(res.getColumnIndex(NOTES_COLUMN_DATE))));
             res.moveToNext();
         }
         Log.d(TAG, notes.size() + " notes retrieved from db.");
-        return notes;
-    }
-
-    public List<String> stringifyNotes(List<Note> noteList) {
-        List<String> notes = new ArrayList<>();
-        if (noteList.size() > 0) {
-            for (Note note : noteList) {
-                notes.add(note.getText());
-            }
-        }
-        Log.d(TAG, notes.size() + " notes stringified.");
         return notes;
     }
 

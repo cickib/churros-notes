@@ -34,7 +34,7 @@ public class NoteSorter {
         return new SortOption(mode.toUpperCase(), order.toUpperCase());
     }
 
-    public List<String> sort() {
+    public List<Note> sort() {
         Log.d(TAG, "Sorted " + convertSort().getMode() + convertSort().getOrder() + ".");
         List<Note> sorted = dbHelper.getAll();
         switch (convertSort().getMode()) {
@@ -48,6 +48,6 @@ public class NoteSorter {
         if (convertSort().getOrder().equals("DESC")) {
             Collections.reverse(sorted);
         }
-        return dbHelper.stringifyNotes(sorted);
+        return sorted;
     }
 }

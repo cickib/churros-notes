@@ -7,11 +7,23 @@
     android:background="@color/colorWhite">
 
     <TextView
+        android:id="@+id/note_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
+
+    <TextView
         android:id="@+id/note_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:layout_weight="9" />
+
+    <TextView
+        android:id="@+id/note_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/delete_note"
@@ -20,6 +32,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="@string/delete_note"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:onClick="deleteNote"/>
 
 </RelativeLayout>

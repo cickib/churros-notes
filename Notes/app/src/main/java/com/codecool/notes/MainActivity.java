@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.codecool.notes.dao.DbHelper;
 import com.codecool.notes.model.Note;
@@ -23,7 +25,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
     private String order = "Date ▲";
-    private ArrayAdapter<String> adapter;
+    private NoteAdapter noteAdapter;
     private DbHelper dbHelper;
     private ListView listViewNotes;
     private Spinner spinner;
@@ -37,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DbHelper(this);
         noteSorter = new NoteSorter(dbHelper, order);
         listViewNotes = (ListView) findViewById(R.id.listview_notes);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this,
                 R.array.sort_options, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner = (Spinner) findViewById(R.id.sort_spinner);
-        spinner.setAdapter(adapter);
+        spinner.setAdapter(sortAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view,
@@ -92,15 +94,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUi(List<String> notes) {
+    private void updateUi(List<Note> notes) {
         Log.d(TAG, "Ui updated.");
-        if (adapter == null) {
-            adapter = new ArrayAdapter<>(this, R.layout.note_item, R.id.note_text, notes);
-            listViewNotes.setAdapter(adapter);
+        if (noteAdapter == null) {
+            noteAdapter = new NoteAdapter(this, R.layout.note_item, notes);
+            listViewNotes.setAdapter(noteAdapter);
         } else {
-            adapter.clear();
-            adapter.addAll(notes);
-            adapter.notifyDataSetChanged();
+            noteAdapter.clear();
+            noteAdapter.addAll(notes);
+            noteAdapter.notifyDataSetChanged();
         }
     }
 
