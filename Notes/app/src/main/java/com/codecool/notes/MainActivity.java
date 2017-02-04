@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codecool.notes.dao.DbHelper;
@@ -106,5 +107,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    TODO implement deletion
+    public void deleteNote(View view) {
+        View parent = (View) view.getParent();
+        int noteId = Integer.parseInt(((TextView) parent.findViewById(R.id.note_id)).getText().toString());
+        dbHelper.deleteNote(noteId);
+        updateUi(noteSorter.sort());
+        Toast.makeText(MainActivity.this, "Note deleted. Yay!", Toast.LENGTH_SHORT).show();
+    }
 }
