@@ -8,6 +8,8 @@
 
     <string name="sort_prompt">Sort</string>
     <string name="sorted_by">Sorted:</string>
+    <string name="yes">Yes.</string>
+    <string name="confirm_dialog">Are your sure?</string>
 
     <string-array name="sort_options">
         <item>ABC &#9650;</item>

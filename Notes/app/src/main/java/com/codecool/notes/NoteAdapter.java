@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.codecool.notes.model.Note;
@@ -39,6 +40,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
             holder.textViewId = (TextView) row.findViewById(R.id.note_id);
             holder.textViewText = (TextView) row.findViewById(R.id.note_text);
             holder.textViewDate = (TextView) row.findViewById(R.id.note_date);
+            holder.deleteButton = (Button) row.findViewById(R.id.delete_note);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
@@ -47,6 +49,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         holder.textViewId.setText(String.valueOf(note.getId()));
         holder.textViewText.setText(note.getText());
         holder.textViewDate.setText(String.valueOf(note.getDate()));
+        holder.deleteButton.setText(R.string.delete_note);
         return row;
     }
 
@@ -54,5 +57,6 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         private TextView textViewId;
         private TextView textViewText;
         private TextView textViewDate;
+        private Button deleteButton;
     }
 }

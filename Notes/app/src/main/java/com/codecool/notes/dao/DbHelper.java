@@ -53,8 +53,8 @@ public class DbHelper extends SQLiteOpenHelper {
             db.insert(NOTES_TABLE_NAME, null, contentValues);
             Log.d(TAG, "New record inserted to db (Note arg).");
             return true;
-        } catch (SQLiteException e){
-            Log.e(TAG, "Failed to insert to "+NOTES_TABLE_NAME+".\n"+e.getMessage());
+        } catch (SQLiteException e) {
+            Log.e(TAG, "Failed to insert to " + NOTES_TABLE_NAME + ". " + e.getMessage());
             return false;
         }
     }

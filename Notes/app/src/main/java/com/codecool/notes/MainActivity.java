@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -110,8 +109,13 @@ public class MainActivity extends AppCompatActivity {
     public void deleteNote(View view) {
         View parent = (View) view.getParent();
         int noteId = Integer.parseInt(((TextView) parent.findViewById(R.id.note_id)).getText().toString());
-        dbHelper.deleteNote(noteId);
-        updateUi(noteSorter.sort());
-        Toast.makeText(MainActivity.this, "Note deleted. Yay!", Toast.LENGTH_SHORT).show();
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.confirm_dialog).setPositiveButton(R.string.yes,
+                (dialog1, which) -> {
+                    dbHelper.deleteNote(noteId);
+                    updateUi(noteSorter.sort());
+                    Toast.makeText(MainActivity.this, "Note deleted. Yay!", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton(R.string.cancel, null).create();
+        dialog.show();
     }
 }
