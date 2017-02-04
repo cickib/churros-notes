@@ -33,15 +33,16 @@ public class NoteSorter {
         return new SortOption(mode.toUpperCase(), order.toUpperCase());
     }
 
-    //TODO fix alphabetic sorting
     public List<String> sort() {
         Log.d(TAG, "Sorted " + convertSort().getMode() + convertSort().getOrder() + ".");
         List<Note> sorted = dbHelper.getAll();
         switch (convertSort().getMode()) {
             case "ABC":
                 Collections.sort(sorted, (note1, note2) -> note1.getText().compareTo(note2.getText()));
+                break;
             case "DATE":
                 Collections.sort(sorted, (note1, note2) -> note1.getDate().compareTo(note2.getDate()));
+                break;
         }
         if (convertSort().getOrder().equals("DESC")) {
             Collections.reverse(sorted);
