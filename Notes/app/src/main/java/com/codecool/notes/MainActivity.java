@@ -81,9 +81,11 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.save,
                                 (dialog1, which) -> {
                                     String note = String.valueOf(noteEditText.getText());
-                                    Log.d(TAG, "Note to save: " + note);
-                                    dbHelper.insertNote(new Note(note, new Date()));
-                                    updateUi(noteSorter.sort());
+                                    if (note.length() > 0) {
+                                        Log.d(TAG, "Note to save: " + note);
+                                        dbHelper.insertNote(new Note(note, new Date()));
+                                        updateUi(noteSorter.sort());
+                                    }
                                 })
                         .setNegativeButton(R.string.cancel, null).create();
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -95,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUi(List<Note> notes) {
-        Log.d(TAG, "Ui updated.");
         if (noteAdapter == null) {
             noteAdapter = new NoteAdapter(this, R.layout.note_item, notes);
             listViewNotes.setAdapter(noteAdapter);
@@ -104,17 +105,20 @@ public class MainActivity extends AppCompatActivity {
             noteAdapter.addAll(notes);
             noteAdapter.notifyDataSetChanged();
         }
+        Log.d(TAG, "Ui updated.");
     }
 
     public void deleteNote(View view) {
         View parent = (View) view.getParent();
         int noteId = Integer.parseInt(((TextView) parent.findViewById(R.id.note_id)).getText().toString());
-        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.confirm_dialog).setPositiveButton(R.string.yes,
-                (dialog1, which) -> {
-                    dbHelper.deleteNote(noteId);
-                    updateUi(noteSorter.sort());
-                    Toast.makeText(MainActivity.this, "Note deleted. Yay!", Toast.LENGTH_SHORT).show();
-                })
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.confirm_dialog)
+                .setPositiveButton(R.string.yes,
+                        (dialog1, which) -> {
+                            dbHelper.deleteNote(noteId);
+                            updateUi(noteSorter.sort());
+                            Toast.makeText(MainActivity.this, "Note deleted. Yay!", Toast.LENGTH_SHORT).show();
+                        })
                 .setNegativeButton(R.string.cancel, null).create();
         dialog.show();
     }
