@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.codecool.notes.dao.DbHelper;
 import com.codecool.notes.model.Note;
+import com.codecool.notes.util.NoteAdapter;
+import com.codecool.notes.util.NoteSorter;
 
 import java.util.Date;
 import java.util.List;

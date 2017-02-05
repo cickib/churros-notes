@@ -1,4 +1,4 @@
-package com.codecool.notes;
+package com.codecool.notes.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,12 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.codecool.notes.R;
 import com.codecool.notes.model.Note;
 
 import java.util.List;
 
 /**
- * Custom Adapter for displaying the Note instances on the screen
+ * Custom Adapter for displaying the Note instances on the screen.
  */
 public class NoteAdapter extends ArrayAdapter<Note> {
 
