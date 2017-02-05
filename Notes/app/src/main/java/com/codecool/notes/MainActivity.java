@@ -3,6 +3,7 @@ package com.codecool.notes;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -48,67 +49,6 @@ public class MainActivity extends AppCompatActivity {
         updateUi(noteSorter.sort());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, "Options menu created.");
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "'" + item + "' selected from options menu.");
-        switch (item.getItemId()) {
-            case R.id.menu_add:
-                final EditText noteEditText = new EditText(this);
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle(R.string.add_dialog_title)
-                        .setView(noteEditText)
-                        .setPositiveButton(R.string.save,
-                                (dialog1, which) -> {
-                                    String note = String.valueOf(noteEditText.getText());
-                                    if (note.length() > 0) {
-                                        Log.d(TAG, "Note to save: " + note);
-                                        dbHelper.insertNote(new Note(note, new Date()));
-                                        updateUi(noteSorter.sort());
-                                    }
-                                })
-                        .setNegativeButton(R.string.cancel, null).create();
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                dialog.show();
-                return true;
-            case R.id.menu_clear_all:
-                AlertDialog dialogClear = new AlertDialog.Builder(this)
-                        .setTitle(R.string.clear_all)
-                        .setPositiveButton(R.string.yes,
-                                (dialog1, which) -> {
-                                    dbHelper.clearTable();
-                                    updateUi(noteSorter.sort());
-                                    Toast.makeText(MainActivity.this, "All clear. Yay!", Toast.LENGTH_SHORT).show();
-                                })
-                        .setNegativeButton(R.string.cancel, null).create();
-                dialogClear.show();
-                return true;
-            case R.id.menu_info:
-                LayoutInflater layoutInflater = LayoutInflater.from(this);
-                final View view = layoutInflater.inflate(R.layout.github, null);
-                AlertDialog dialogGitHub = new AlertDialog.Builder(this)
-                        .setView(view)
-                        .setTitle(R.string.github)
-                        .setPositiveButton(R.string.yes,
-                                (dialog1, which) -> {
-                                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                                            Uri.parse("https://github.com/CodecoolBP20161/advanced-teaser-cickib"));
-                                    startActivity(intent);
-                                })
-                        .setNegativeButton(R.string.cancel, null).create();
-                dialogGitHub.show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void updateUi(List<Note> notes) {
         if (noteAdapter == null) {
             noteAdapter = new NoteAdapter(this, R.layout.note_item, notes);
@@ -121,19 +61,89 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Ui updated.");
     }
 
-    public void deleteNote(View view) {
-        View parent = (View) view.getParent();
-        int noteId = Integer.parseInt(((TextView) parent.findViewById(R.id.note_id)).getText().toString());
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "Options menu created.");
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "'" + item + "' selected from options menu.");
+        switch (item.getItemId()) {
+            case R.id.menu_add:
+                return addMenu();
+            case R.id.menu_clear_all:
+                return clearMenu();
+            case R.id.menu_info:
+                return infoMenu();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private boolean addMenu() {
+        final EditText noteEditText = new EditText(this);
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.confirm_dialog)
-                .setPositiveButton(R.string.yes,
+                .setTitle(R.string.add_dialog_title)
+                .setView(noteEditText)
+                .setPositiveButton(R.string.save,
                         (dialog1, which) -> {
-                            dbHelper.deleteNote(noteId);
-                            updateUi(noteSorter.sort());
-                            Toast.makeText(MainActivity.this, "Note deleted. Yay!", Toast.LENGTH_SHORT).show();
+                            String note = String.valueOf(noteEditText.getText());
+                            if (note.length() > 0) {
+                                Log.d(TAG, "Note to save: " + note);
+                                dbHelper.insertNote(new Note(note, new Date()));
+                                updateUi(noteSorter.sort());
+                            }
                         })
                 .setNegativeButton(R.string.cancel, null).create();
+        dialog.setOnShowListener(arg0 -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.colorDark));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.colorAccentDarker));
+        });
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
+        return true;
+    }
+
+    private boolean infoMenu() {
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        final View view = layoutInflater.inflate(R.layout.github, null);
+        AlertDialog dialogGitHub = new AlertDialog.Builder(this)
+                .setView(view)
+                .setTitle(R.string.github)
+                .setPositiveButton(R.string.yes,
+                        (dialog1, which) -> {
+                            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                    Uri.parse("https://github.com/CodecoolBP20161/advanced-teaser-cickib"));
+                            startActivity(intent);
+                        })
+                .setNegativeButton(R.string.cancel, null).create();
+        dialogGitHub.setOnShowListener(arg0 -> {
+            dialogGitHub.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.colorDark));
+            dialogGitHub.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.colorAccentDarker));
+        });
+        dialogGitHub.show();
+        return true;
+    }
+
+    private boolean clearMenu() {
+        AlertDialog dialogClear = new AlertDialog.Builder(this)
+                .setTitle(R.string.clear_all)
+                .setPositiveButton(R.string.yes,
+                        (dialog1, which) -> {
+                            dbHelper.clearTable();
+                            updateUi(noteSorter.sort());
+                            Toast.makeText(MainActivity.this, "All clear. Yay!", Toast.LENGTH_SHORT).show();
+                        })
+                .setNegativeButton(R.string.cancel, null).create();
+        dialogClear.setOnShowListener(arg0 -> {
+            dialogClear.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.colorDark));
+            dialogClear.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.colorAccentDarker));
+        });
+        dialogClear.show();
+        return true;
     }
 
     private Spinner createSortSpinner() {
@@ -151,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
                 if (item != null) {
                     noteSorter.setOrderString(item.toString());
                     updateUi(noteSorter.sort());
+                    order = item.toString();
+                    Toast.makeText(MainActivity.this, "Notes sorted " + order, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -159,5 +171,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return spinner;
+    }
+
+    public void deleteNote(View view) {
+        View parent = (View) view.getParent();
+        int noteId = Integer.parseInt(((TextView) parent.findViewById(R.id.note_id)).getText().toString());
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.confirm_dialog)
+                .setPositiveButton(R.string.yes,
+                        (dialog1, which) -> {
+                            dbHelper.deleteNote(noteId);
+                            updateUi(noteSorter.sort());
+                            Toast.makeText(MainActivity.this, "Note deleted. Yay!", Toast.LENGTH_SHORT).show();
+                        })
+                .setNegativeButton(R.string.cancel, null).create();
+        dialog.setOnShowListener(arg0 -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.colorDark));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.colorAccentDarker));
+        });
+        dialog.show();
     }
 }
