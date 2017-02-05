@@ -13,14 +13,16 @@ import com.codecool.notes.model.Note;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO upgrade to prepared statements
+/**
+ * Implements all necessary methods to interact with the database of the application.
+ */
 public class DbHelper extends SQLiteOpenHelper {
-    private static final String NOTES_TABLE_NAME = "notes";
-    private static final String NOTES_COLUMN_ID = "id";
-    private static final String NOTES_COLUMN_TEXT = "text";
-    private static final String NOTES_COLUMN_DATE = "date";
-    private static final String DATABASE_NAME = "notesApp.db";
+    private static final String DATABASE_NAME = "notes.db";
     private final String TAG = this.getClass().getSimpleName();
+    private final String NOTES_TABLE_NAME = "notes";
+    private final String NOTES_COLUMN_ID = "id";
+    private final String NOTES_COLUMN_TEXT = "text";
+    private final String NOTES_COLUMN_DATE = "date";
     private SQLiteDatabase db;
 
     public DbHelper(Context context) {
@@ -43,7 +45,7 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean insertNote(Note note) {
+    public void insertNote(Note note) {
         db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(NOTES_COLUMN_TEXT, note.getText());
@@ -51,31 +53,9 @@ public class DbHelper extends SQLiteOpenHelper {
         try {
             db.insert(NOTES_TABLE_NAME, null, contentValues);
             Log.d(TAG, "New record inserted to db (Note arg).");
-            return true;
         } catch (SQLiteException e) {
             Log.e(TAG, "Failed to insert to " + NOTES_TABLE_NAME + ". " + e.getMessage());
-            return false;
         }
-    }
-
-    public Note getNoteById(int id) {
-        db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + NOTES_TABLE_NAME + " WHERE " + NOTES_COLUMN_ID + "=" + id + ";", null);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            Log.d(TAG, "Note retrieved.");
-            return new Note(cursor.getInt(cursor.getColumnIndex(NOTES_COLUMN_ID)), cursor.getString(cursor.getColumnIndex(NOTES_COLUMN_TEXT)), cursor.getString(cursor.getColumnIndex(NOTES_COLUMN_DATE)));
-        }
-        Log.d(TAG, "No note found with id " + id + ".");
-        return null;
-    }
-
-    public boolean updateNote(int id, String text) {
-        db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(NOTES_COLUMN_TEXT, text);
-        db.update(NOTES_TABLE_NAME, contentValues, NOTES_COLUMN_ID + " = ? ;", new String[]{Integer.toString(id)});
-        return true;
     }
 
     public Integer deleteNote(int id) {
