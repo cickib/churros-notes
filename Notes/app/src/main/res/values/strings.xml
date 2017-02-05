@@ -8,9 +8,11 @@
 
     <string name="sort_prompt">Sort</string>
     <string name="sorted_by">Sorted:</string>
-    <string name="yes">Yes.</string>
+    <string name="yes">Yes</string>
     <string name="confirm_dialog">Are your sure?</string>
     <string name="clear_all">Delete every note</string>
+    <string name="info">Info</string>
+    <string name="github">Do you want to checkout the GitHub repo for more info?</string>
 
     <string-array name="sort_options">
         <item>&#9650; ABC</item>

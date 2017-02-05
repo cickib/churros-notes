@@ -1,9 +1,12 @@
 package com.codecool.notes;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,6 +107,21 @@ public class MainActivity extends AppCompatActivity {
                                 })
                         .setNegativeButton(R.string.cancel, null).create();
                 dialogClear.show();
+            case R.id.menu_info:
+                LayoutInflater layoutInflater = LayoutInflater.from(this);
+                final View view = layoutInflater.inflate(R.layout.github, null);
+                AlertDialog dialogGitHub = new AlertDialog.Builder(this)
+                        .setView(view)
+                        .setTitle(R.string.github)
+                        .setPositiveButton(R.string.yes,
+                                (dialog1, which) -> {
+                                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                            Uri.parse("https://github.com/CodecoolBP20161/advanced-teaser-cickib"));
+                                    startActivity(intent);
+                                })
+                        .setNegativeButton(R.string.cancel, null).create();
+                dialogGitHub.show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
