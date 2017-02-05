@@ -29,7 +29,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
-    private String order = "▲ Date";
+    private String order = "▼ Date";
     private NoteAdapter noteAdapter;
     private DbHelper dbHelper;
     private ListView listViewNotes;
@@ -44,26 +44,7 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DbHelper(this);
         noteSorter = new NoteSorter(dbHelper, order);
         listViewNotes = (ListView) findViewById(R.id.listview_notes);
-        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this,
-                R.array.sort_options, android.R.layout.simple_spinner_item);
-        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner = (Spinner) findViewById(R.id.sort_spinner);
-        spinner.setAdapter(sortAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view,
-                                       int position, long id) {
-                Object item = adapterView.getItemAtPosition(position);
-                if (item != null) {
-                    noteSorter.setOrderString(item.toString());
-                    updateUi(noteSorter.sort());
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
+        spinner = createSortSpinner();
         updateUi(noteSorter.sort());
     }
 
@@ -107,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                                 })
                         .setNegativeButton(R.string.cancel, null).create();
                 dialogClear.show();
+                return true;
             case R.id.menu_info:
                 LayoutInflater layoutInflater = LayoutInflater.from(this);
                 final View view = layoutInflater.inflate(R.layout.github, null);
@@ -152,5 +134,30 @@ public class MainActivity extends AppCompatActivity {
                         })
                 .setNegativeButton(R.string.cancel, null).create();
         dialog.show();
+    }
+
+    private Spinner createSortSpinner() {
+        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this,
+                R.array.sort_options, android.R.layout.simple_spinner_item);
+        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner = (Spinner) findViewById(R.id.sort_spinner);
+        spinner.setAdapter(sortAdapter);
+        spinner.setSelection(sortAdapter.getPosition(order));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
+                Object item = adapterView.getItemAtPosition(position);
+                if (item != null) {
+                    noteSorter.setOrderString(item.toString());
+                    updateUi(noteSorter.sort());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        return spinner;
     }
 }
