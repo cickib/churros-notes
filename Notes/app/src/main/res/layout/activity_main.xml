@@ -9,15 +9,18 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.codecool.notes.MainActivity">
+    android:scrollbarSize="2dp"
+    android:scrollbarStyle="outsideOverlay"
+    tools:context=".MainActivity">
 
     <LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sorted_by" />
+            android:layout_height="34dp"
+            android:layout_weight="2.00"
+            android:text="@string/sorted_by"
+            android:textSize="20sp" />
 
         <Spinner
             android:id="@+id/sort_spinner"
@@ -31,13 +34,26 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
         android:background="@android:color/darker_gray" />
 
     <ListView
         android:id="@+id/listview_notes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_margin="0dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="1dp"
+        android:fadeScrollbars="true"
+        android:hapticFeedbackEnabled="true"
+        android:listSelector="@android:drawable/list_selector_background"
+        android:longClickable="false"
+        android:padding="0dp"
+        android:scrollbarDefaultDelayBeforeFade="40"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarThumbVertical="@drawable/scrollbar" />
 
 </TableLayout>
